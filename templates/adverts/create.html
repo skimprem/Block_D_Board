@@ -1,0 +1,13 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1> Создать объявление </h1>
+<h2><a href="/"> На главную </a></h2>
+<hr>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.media }}
+    {{ form.as_p }}
+    <input type="submit" value="Сохранить"/>
+</form>
+{% endblock content %}

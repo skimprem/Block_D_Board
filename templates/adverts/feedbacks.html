@@ -1,0 +1,107 @@
+<!-- Наследование от defaults.html -->
+{% extends 'main.html' %}
+
+<!-- Название News -->
+{% block title %}
+    Объявления
+{% endblock title %}
+
+<!-- Выводим все новости -->
+{% block content %}
+<h1> Доска объявлений </h1>
+<form action="" method="get">
+    {{ filterset.form.as_p }}
+<input type="submit" value="Найти" />
+</form>
+<hr>
+<table>
+    <tr>
+        <td>
+            <h2> <a href='/'> На главную </a></h2>
+        </td>
+        <td>
+            <h2>
+                {% if request.user.is_authenticated %}
+                    <a href='/sign/logout/'> Выйти </a>
+                {% else %}
+                    <a href='/sign/login/'> Войти </a>
+                {% endif %}
+            </h2>
+        </td>
+    </tr>
+</table>
+<hr>
+{% comment %} {% if adverts %} {% endcomment %}
+    <table>
+        {% comment %} {% for advert in adverts %}
+            <tr>
+                <td>
+                    <h3> {{ advert.title }} </h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3> {{ advert.content|safe }} </h3>
+                </td>
+            </tr> {% endcomment %}
+            {% for feedback in feedbacks %}
+                {% if feedback %}
+                    <tr>
+                        <td>
+                            Отклик от {{ feedback.user }}:
+                        </td>
+                        <td>
+                            {% if feedback.accept %}
+                                <td>
+                                    <a href="reject/?feedback_id={{feedback.pk}}"> Отклонить </a>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <a href="accept/?feedback_id={{feedback.pk}}"> Принять </a>
+                                </td>
+                            {% endif %}
+                        </td>
+                    <tr>
+                    </tr>
+                        <td>
+                            {{ feedback.text }}
+                        </td>
+                    </tr>
+                    </tr>
+                        <td>
+                            <a href="delete/?feedback_id={{feedback.pk}}"> Удалить </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    Откликов нет
+                {% endif %}
+            {% endfor %}
+        {% comment %} {% endfor %} {% endcomment %}
+    </table>
+{% comment %} {% else %} {% endcomment %}
+    {% comment %} Объявлений с откликами нет  {% endcomment %}
+{% comment %} {% endif %} {% endcomment %}
+
+   {# Добавляем пагинацию на страницу #}
+    <!-- Информация о предыдущих страницах -->
+    <nobr>
+        {% if page_obj.has_previous %}
+            <a href="?page=1">1</a>
+            {% if page_obj.previous_page_number != 1 %}
+                ...
+                <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+            {% endif %}
+        {% endif %}
+        {# Информация о текущей странице #}
+        {{ page_obj.number }}
+        {# Информация о следующих страницах #}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+            {% if paginator.num_pages != page_obj.next_page_number %}
+                ...
+                <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+            {% endif %}
+        {% endif %}
+    </nobr>
+
+{% endblock content %}

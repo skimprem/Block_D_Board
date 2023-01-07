@@ -1,0 +1,12 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1> Отклик </h1>
+<h2><a href="/"> На главную </a></h2>
+<hr>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Отправить"/>
+</form>
+{% endblock content %}

@@ -1,0 +1,91 @@
+<!-- Наследование от defaults.html -->
+{% extends 'main.html' %}
+
+<!-- Название News -->
+{% block title %}
+    Объявления
+{% endblock title %}
+
+<!-- Выводим все новости -->
+{% block content %}
+<h1> Доска объявлений </h1>
+<hr>
+<table>
+    <tr>
+        <td>
+            <a href="/create/"> Создать объявление </a>
+        </td>
+        <td>
+            <a href='/feedbacks'> Отклики </a>
+        </td>
+        <td>
+            {% if request.user.is_authenticated %}
+                <td>
+                    Вы вошли как {{ request.user.username }}
+                </td>
+                <td>
+                    <a href='/sign/logout/'> Выйти </a>
+                </td>
+            {% else %}
+                <a href='/sign/login/'> Войти </a>
+            {% endif %}
+        </td>
+    </tr>
+</table>
+<hr>
+{% if adverts %}
+    <table>
+        {% for advert in adverts %}
+            <tr>
+                <td>
+                    <h3>{{ advert.title }}</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h4>
+                        <i>
+                            {{ advert.user.first_name }} {{ advert.user.last_name }}
+                        </i>
+                    </h4>
+                </td>
+                <td>
+                    <h4>
+                        <i>
+                            {{ advert.pub_time|date:'d.m.Y' }}
+                        </i>
+                    </h4>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ advert.content|safe }} <a href="/adverts/{{advert.pk}}">Читать</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h2> Оъявлений нет </h2>
+{% endif %}
+
+   {# Добавляем пагинацию на страницу #}
+    <!-- Информация о предыдущих страницах -->
+    <nobr>
+        {% if page_obj.has_previous %}
+            <a href="?page=1">1</a>
+            {% if page_obj.previous_page_number != 1 %}
+                ...
+                <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+            {% endif %}
+        {% endif %}
+        {# Информация о текущей странице #}
+        {{ page_obj.number }}
+        {# Информация о следующих страницах #}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+            {% if paginator.num_pages != page_obj.next_page_number %}
+                ...
+                <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+            {% endif %}
+        {% endif %}
+    </nobr>
+
+{% endblock content %}

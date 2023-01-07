@@ -1,0 +1,46 @@
+{% extends 'main.html' %}
+
+{% block title %}
+    Объявление
+{% endblock title %}
+
+<!-- Выводим новость -->
+{% block content %}
+<h2><a href="/"> На главную </a></h2>
+<hr>
+    <table>
+        <tr>
+            <td>
+                <h3>
+                    {{ advert.title }}
+                </h3>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <i>
+                    <h4>
+                        {{ advert.user.first_name }} {{advert.user.last_name }}
+                    </h4>
+                </i>
+            </td>
+            <td>
+                <i>
+                    <h4>
+                        {{ advert.pub_time|date:'d.m.Y' }}
+                    </h4>
+                </i>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {{ advert.content|safe }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a href="feedback/?advert_id={{advert.pk}}"> Откликнуться </a> 
+            </td>
+        </tr>
+    </table>
+{% endblock content %}
